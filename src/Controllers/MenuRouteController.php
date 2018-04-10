@@ -1,6 +1,10 @@
 <?php
 
-namespace Gearhead\WPMenuAPI;
+namespace Gearhead\WPMenuAPI\Controllers;
+
+use Gearhead\WPMenuAPI\Models\Menu;
+use Gearhead\WPMenuAPI\Models\MenuItem;
+use Gearhead\WPMenuAPI\Repositories\MenuRepository;
 
 class MenuRouteController {
 	/**
@@ -32,17 +36,17 @@ class MenuRouteController {
 			],
 		]);
 
-//		register_rest_route($this->apiMenuNamespace, '/menus/(?P<id>\d+)', [
-//			[
-//				'methods'  => \WP_REST_Server::READABLE,
-//				'callback' => [$this->menuRouter, 'menuShow'],
-//				'args'     => [
-//					'context' => [
-//						'default' => 'view',
-//					],
-//				],
-//			],
-//		]);
+		register_rest_route($this->apiMenuNamespace, '/menus/(?P<id>\d+)', [
+			[
+				'methods'  => \WP_REST_Server::READABLE,
+				'callback' => [$this, 'menuShow'],
+				'args'     => [
+					'context' => [
+						'default' => 'view',
+					],
+				],
+			],
+		]);
 
 //		register_rest_route($this->apiMenuNamespace, '/menu-locations', [
 //			[
@@ -67,12 +71,15 @@ class MenuRouteController {
 			return;
 		}
 
-		$menuObject = $this->menuRepository->findMenu($id);
-		if (!$menuObject) {
-			return;
-		}
-
-		$menuObjectItems = $this->menuRepository->findMenuItems($id);
+		$menuObject = $this->menuRepository->findMenuWithMenuItems($id);
+//		if (!$menuObject) {
+//			return;
+//		}
+//
+////		$menuObjectItems = $this->menuRepository->findMenuItems($id);
+//		$menuObjectItems = array_map(function($item) {
+//			return new MenuItem($item);
+//		}, $menuObjectItems);
 	}
 
 	/**
@@ -80,12 +87,7 @@ class MenuRouteController {
 	 * @return mixed
 	 */
 	public function menuIndex() {
-		$baseRoute = $this->baseRoute('/menus/');
 		$menus = $this->menuRepository->all();
-
-		$menus = array_map(function($menu) use ($baseRoute) {
-			return new Menu($menu, $baseRoute);
-		}, $menus);
 
 		return apply_filters('rest_menus_format_menus', $menus);
 	}
@@ -97,10 +99,4 @@ class MenuRouteController {
 	public function locationIndex() {
 
 	}
-
-	public function baseRoute($route) {
-		// todo ensure $route is formatted correctly
-		return trailingslashit(get_rest_url() . $this->apiNamespace . $route);
-	}
-
 }
