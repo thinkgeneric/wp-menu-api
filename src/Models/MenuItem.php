@@ -23,7 +23,20 @@ class MenuItem implements \JsonSerializable {
 	}
 
 	public function children() {
+		return $this->children;
+	}
 
+	public function setChildren($children) {
+		$this->children = $children;
+	}
+
+	//todo this is not ideal
+	public function parent() {
+		return $this->item->menu_item_parent;
+	}
+
+	public function id() {
+		return $this->item->ID;
 	}
 
 	/**
@@ -54,14 +67,9 @@ class MenuItem implements \JsonSerializable {
 			'type_label'  => $item->type_label,
 		];
 
-		if ($this->hasChildren()) {
+		if ($this->children()) {
 			$menuItem['children'] = $this->children();
 		}
-
-		// todo we may want to create the "menu" object sooner, at the repo level. then we can use this function closer to the initial query
-//		if ($children === true && ! empty($menu)) {
-//			$menu_item['children'] = $this->get_nav_menu_item_children($item['id'], $menu);
-//		}
 
 		return apply_filters('rest_menus_format_menu_item', $menuItem);
 	}

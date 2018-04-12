@@ -28,6 +28,6 @@ class MenuRepository {
 			return new MenuItem($item);
 		}, wp_get_nav_menu_items(($id)));
 		$menu->items($items);
-		dd($menu);
+		return $menu;
 	}
 }
