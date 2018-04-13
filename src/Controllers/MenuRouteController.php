@@ -65,21 +65,18 @@ class MenuRouteController {
 
 	public function menuShow($request) {
 		$id = (int) $request['id'];
-		$baseUrl = $this->baseRoute('/menus/');
 		// If $id is not set, bail
 		if (!$id) {
 			return;
 		}
 
 		$menuObject = $this->menuRepository->findMenuWithMenuItems($id);
-//		if (!$menuObject) {
-//			return;
-//		}
-//
-////		$menuObjectItems = $this->menuRepository->findMenuItems($id);
-//		$menuObjectItems = array_map(function($item) {
-//			return new MenuItem($item);
-//		}, $menuObjectItems);
+
+		if (!$menuObject) {
+			return;
+		}
+
+		return apply_filters('rest_menus_format_menu', $menuObject);
 	}
 
 	/**
