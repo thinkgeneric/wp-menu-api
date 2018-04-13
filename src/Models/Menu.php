@@ -11,7 +11,7 @@ class Menu implements \JsonSerializable  {
 	 * WordPress API Namespace
 	 * @var string
 	 */
-	protected $apiNamespace = 'wp/v2';
+	protected $apiNamespace = 'wp/v2'; // todo this needs to be changed
 
 	protected $route = '/menus/';
 

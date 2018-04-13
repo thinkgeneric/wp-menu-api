@@ -2,6 +2,7 @@
 
 namespace Gearhead\WPMenuAPI\Repositories;
 
+use Gearhead\WPMenuAPI\Models\Location;
 use Gearhead\WPMenuAPI\Models\Menu;
 use Gearhead\WPMenuAPI\Models\MenuItem;
 
@@ -12,7 +13,7 @@ class MenuRepository {
 	 * without their MenuItems attached
 	 * @return array
 	 */
-	public function all() {
+	public function allMenus() {
 		return array_map(function($menu) {
 			return new Menu($menu);
 		}, wp_get_nav_menus());
@@ -58,4 +59,27 @@ class MenuRepository {
 
 		return $menu;
 	}
+
+	public function allLocations() {
+		$locations = get_nav_menu_locations();
+		$registeredMenus = get_registered_nav_menus();
+
+		if (!$locations && !$registeredMenus) {
+			return;
+		}
+
+		$menus = array_map(function($slug, $label) use($locations) {
+			if (isset($locations[$slug])) {
+				$menu[$slug] = new Location($slug, $label, $locations[$slug]);
+				return $menu;
+			}
+		}, array_keys($registeredMenus), $registeredMenus);
+
+		//todo not sure if this reduction is necessary
+		return array_reduce($menus, function($key, $menu){
+			return $menu;
+		});
+	}
+
+
 }

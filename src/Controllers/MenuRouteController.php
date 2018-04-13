@@ -17,7 +17,7 @@ class MenuRouteController {
 	 * WordPress API Menu namespace
 	 * @var string
 	 */
-	protected $apiMenuNamespace = 'wp-api-menus/v2';
+	protected $apiMenuNamespace = 'wp-api-menus/v2'; //todo change the namespace
 
 	protected $menuRepository;
 
@@ -48,12 +48,12 @@ class MenuRouteController {
 			],
 		]);
 
-//		register_rest_route($this->apiMenuNamespace, '/menu-locations', [
-//			[
-//				'methods'  => \WP_REST_Server::READABLE,
-//				'callback' => [$this->menuRouter, 'getMenuLocations'],
-//			],
-//		]);
+		register_rest_route($this->apiMenuNamespace, '/menus/locations', [
+			[
+				'methods'  => \WP_REST_Server::READABLE,
+				'callback' => [$this, 'locationIndex'],
+			],
+		]);
 
 //		register_rest_route($this->apiMenuNamespace, '/menu-locations/(?P<location>[a-zA-Z0-9_-]+)', [
 //			[
@@ -84,7 +84,7 @@ class MenuRouteController {
 	 * @return mixed
 	 */
 	public function menuIndex() {
-		$menus = $this->menuRepository->all();
+		$menus = $this->menuRepository->allMenus();
 
 		return apply_filters('rest_menus_format_menus', $menus);
 	}
@@ -94,6 +94,8 @@ class MenuRouteController {
 	}
 
 	public function locationIndex() {
+		$locations = $this->menuRepository->allLocations();
 
+		return $locations;
 	}
 }
