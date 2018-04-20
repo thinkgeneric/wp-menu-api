@@ -55,12 +55,12 @@ class MenuRouteController {
 			],
 		]);
 
-//		register_rest_route($this->apiMenuNamespace, '/menu-locations/(?P<location>[a-zA-Z0-9_-]+)', [
-//			[
-//				'methods'  => \WP_REST_Server::READABLE,
-//				'callback' => [$this->menuRouter, 'getMenuLocation'],
-//			],
-//		]);
+		register_rest_route($this->apiMenuNamespace, '/menu-locations/(?P<location>[a-zA-Z0-9_-]+)', [
+			[
+				'methods'  => \WP_REST_Server::READABLE,
+				'callback' => [$this->menuRouter, 'getMenuLocation'],
+			],
+		]);
 	}
 
 	public function menuShow($request) {
@@ -89,8 +89,10 @@ class MenuRouteController {
 		return apply_filters('rest_menus_format_menus', $menus);
 	}
 
-	public function locationShow() {
-
+	public function locationShow($request) {
+		// todo I'm not sure if this is the best way to get the 'location' value
+		$slug = $request->get_params()['location'];
+		$location = $this->menuRepository->findLocationWithMenu($slug);
 	}
 
 	public function locationIndex() {

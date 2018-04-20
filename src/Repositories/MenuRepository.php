@@ -60,6 +60,16 @@ class MenuRepository {
 		return $menu;
 	}
 
+	public function findLocationWithMenu($locationSlug) {
+		$locations = get_nav_menu_locations();
+		if(!isset($locations[$locationSlug])) {
+			return [];
+		}
+
+		return $this->findMenuWithMenuItems($locations[$locationSlug]);
+
+	}
+
 	public function allLocations() {
 		$locations = get_nav_menu_locations();
 		$registeredMenus = get_registered_nav_menus();
