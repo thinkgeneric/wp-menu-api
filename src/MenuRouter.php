@@ -4,7 +4,7 @@ namespace Gearhead\WPMenuAPI;
 
 class MenuRouter {
 
-
+	// testing
 	public function getMenus() {
 		$restUrl = trailingslashit(get_rest_url() . $this->apiMenuNamespace . '/menus/');
 
